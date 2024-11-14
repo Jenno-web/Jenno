@@ -1,0 +1,227 @@
+#1
+def createCircle(red,green,blue,cX,cY,radius,depth):
+    a='circle'
+    a=a+' '+str(red)+' '+str(green)+' '+str(blue)+' '+str(cX)+' '+str(cY)+' '+str(radius)+' '+str(depth)
+    return a
+
+
+#2
+def createRectangle(red,green,blue,x1,y1,x2,y2,depth):
+    a='rectangle'
+    a=a+' '+str(red)+' '+str(green)+' '+str(blue)+' '+str(x1)+' '+str(y1)+' '+str(x2)+' '+str(y2)+' '+str(depth)
+    return a
+
+
+#3
+def createSmileyFace():
+    a=[]
+    a.append(createCircle(0,0,0,100,100,75,0))
+    a.append(createCircle(0,0,0,80,85,15,0))
+    a.append(createCircle(0,0,0,120,85,15,0))
+    a.append(createRectangle(0,0,0,80,130,120,130,0)) 
+    a.append(createRectangle(0,0,0,5,5,194,194,0))
+    return a
+
+
+#1
+def getCircles(shapeList):
+    b=[]
+    c=shapeList[:]
+    for x in range(len(c)):     
+        c[x]=c[x].split()      
+        if c[x][0]=='circle' and len(c[x])==8:
+         a={}
+         a["color"]=[]
+         a["color"].append(int(c[x][1]))
+         a["color"].append(int(c[x][2]))
+         a["color"].append(int(c[x][3]))     
+         a["x"]=int(c[x][4])      
+         a["y"]=int(c[x][5])
+         a["radius"]=int(c[x][6])
+         a["depth"]=int(c[x][7])
+         b.append(a)
+    return b
+
+#2
+def getRectangles(shapeList):
+    b=[]
+    c=shapeList[:]
+    for x in range(len(c)):     
+        c[x]=c[x].split()      
+        if c[x][0]=='rectangle' and len(c[x])==9:
+         a={}
+         a["color"]=[]
+         a["color"].append(int(c[x][1]))
+         a["color"].append(int(c[x][2]))
+         a["color"].append(int(c[x][3]))     
+         a["x1"]=int(c[x][4])      
+         a["y1"]=int(c[x][5])
+         a["x2"]=int(c[x][6])
+         a["y2"]=int(c[x][7])
+         a["depth"]=int(c[x][8])
+         b.append(a)
+    return b
+
+#3
+import math
+def convertCircle(circleDict,pixels):
+     radius=circleDict['radius']
+     xcenter=circleDict['x']
+     ycenter=circleDict['y']
+     for x in range(xcenter-radius,xcenter+radius+1):
+        for y in range(ycenter-radius,ycenter+radius+1):
+            a={}
+            xdist=abs(x-xcenter)
+            ydist=abs(y-ycenter)
+            if abs(xdist**2+ydist**2-radius**2)<=radius:
+                a['x']=x
+                a['y']=y
+                a['depth']=circleDict['depth']
+                a['color']=circleDict['color']
+                pixels.append(a)
+                
+     
+
+#4
+import math
+def convertRectangle(rectangleDict,pixels):
+    x1=rectangleDict['x1']
+    x2=rectangleDict['x2']
+    y1=rectangleDict['y1']
+    y2=rectangleDict['y2']
+    xmax=max(x1,x2)
+    xmin=min(x1,x2)
+    ymax=max(y1,y2)
+    ymin=min(y1,y2)
+    if abs(xmin)<=abs(xmax):
+      for x in range(xmin,xmax+1):
+        a={}
+        a['x']=x
+        if abs(ymin)<=abs(ymax):
+         a['y']=ymin
+        else:
+         a['y']=ymax
+        a['depth']=rectangleDict['depth']
+        a['color']=rectangleDict['color']
+        pixels.append(a)
+        b={}
+        b['x']=x
+        if abs(ymin)<=abs(ymax):
+         b['y']=ymax
+        else:
+         b['y']=ymin
+        b['depth']=rectangleDict['depth']
+        b['color']=rectangleDict['color']
+        pixels.append(b)
+    elif abs(xmin)>abs(xmax) :
+      
+      for x in range(xmax,xmin-1,-1):
+        
+        a={}
+        a['x']=x
+        if abs(ymin)<=abs(ymax):
+         a['y']=ymin
+        else:
+         a['y']=ymax
+        a['depth']=rectangleDict['depth']
+        a['color']=rectangleDict['color']
+        pixels.append(a)
+        b={}
+        b['x']=x
+        if abs(ymin)<=abs(ymax):
+         b['y']=ymax
+        else:
+         b['y']=ymin
+        b['depth']=rectangleDict['depth']
+        b['color']=rectangleDict['color']
+        pixels.append(b)
+    if abs(ymin)<=abs(ymax):
+      for y in range(ymin,ymax+1):
+        a={}
+        if abs(xmin)<=abs(xmax):
+         a['x']=xmin
+        else:
+         a['x']=xmax
+        a['y']=y
+        a['depth']=rectangleDict['depth']
+        a['color']=rectangleDict['color']
+        pixels.append(a)
+        b={}
+        if abs(xmin)<=abs(xmax):
+         b['x']=xmax
+        else:
+         b['x']=xmin
+        b['y']=y
+        b['depth']=rectangleDict['depth']
+        b['color']=rectangleDict['color']
+        pixels.append(b)
+    if abs(ymin)>abs(ymax) :
+      for y in range(ymax,ymin-1,-1):
+        a={}
+        if abs(xmin)<=abs(xmax):
+         a['x']=xmin
+        else:
+         a['x']=xmax
+        a['y']=y
+        a['depth']=rectangleDict['depth']
+        a['color']=rectangleDict['color']
+        pixels.append(a)
+        b={}
+        if abs(xmin)<=abs(xmax):
+         b['x']=xmax
+        else:
+         b['x']=xmin
+        b['y']=y
+        b['depth']=rectangleDict['depth']
+        b['color']=rectangleDict['color']
+        pixels.append(b)
+   
+
+#5
+def processCircles(circleList,pixels):
+    for circle in circleList:
+        convertCircle(circle,pixels)
+
+#6
+def processRectangles(rectangleList,pixels):
+    for Rectangle in rectangleList:
+        convertRectangle(Rectangle,pixels)
+
+#1
+def createImage(color,width,height):
+    a=[]
+    for x in range(height):
+        a.append([])
+        for y in range(width):
+            a[x].append(color)
+    return a
+
+#2
+def setPixel(image,x,y,color):
+    if 0<=y<len(image) and 0<=x<len(image[0]):
+            image[y][x]=color
+    
+    
+#3
+def drawPixel(image,pixelDict):
+    for key in pixelDict:
+        if key=='x':
+            x=pixelDict[key]
+        if key=='y':
+            y=pixelDict[key]
+        if key=='color':
+            color=pixelDict[key]
+    setPixel(image,x,y,color)
+
+
+#4
+def drawPixels(image,pixelDicts):
+    for x in pixelDicts:
+        drawPixel(image,x)
+    
+
+#5
+def getDepth(pixel):
+    return pixel['depth']
+def orderPixels(pixels):
+    pixels.sort(key=getDepth)
